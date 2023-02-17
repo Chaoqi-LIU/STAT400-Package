@@ -1,4 +1,6 @@
 import math
+import numpy as np
+import scipy as sp
 
 class Math:
     def fact(n): return math.prod(i for i in range(1, n + 1))
@@ -12,6 +14,7 @@ class NegativeBinominal:
     def variance(self): return self.r * (1 - self.prob) / (self.prob ** 2)
     def pmf(self, x): return Math.C(x - 1, self.r - 1) * (self.prob ** self.r) * ((1 - self.prob) ** (x - self.r))
     def cdf(self, x): return sum(self.pmf(i) for i in range(self.r, x + 1))
+    def mgf(self, t): return self.prob ** self.r / ((1 - (1 - self.prob) * math.exp(t)) ** self.r)
 
 class Binominal:
     def __init__(self, n, prob):
@@ -21,6 +24,7 @@ class Binominal:
     def variance(self): return self.n * self.prob * (1 - self.prob)   
     def pmf(self, x): return Math.C(self.n, x) * (self.prob ** x) * ((1 - self.prob) ** (self.n - x))  
     def cdf(self, x): return sum(self.pmf(i) for i in range(x + 1))
+    def mgf(self, t): return (self.prob * math.exp(t) + (1 - self.prob)) ** self.n
 
 class Geometric:
     def __init__(self, p):
@@ -29,6 +33,7 @@ class Geometric:
     def variance(self): return (1 - self.prob) / self.prob ** 2
     def pmf(self, x): return self.prob * ((1 - self.prob) ** (x - 1))
     def cdf(self, x): return sum(self.pmf(i) for i in range(x + 1))
+    def mgf(self, t): return self.prob / (1 - (1 - self.prob) * math.exp(t))
 
 class Hypergeometric:
     def __init__(self, N, N1, n):
@@ -57,3 +62,13 @@ class Poisson:
     def variance(self): return self.lam
     def pmf(self, x): return (self.lam ** x) * math.exp(-self.lam) / Math.fact(x)
     def cdf(self, x): return sum(self.pmf(i) for i in range(x + 1))
+    def mgf(self, t): return math.exp(self.lam * (math.exp(t) - 1))
+
+class Normal:
+    def __init__(self, mu, var):
+        self.mu = mu
+        self.var = var
+    def mean(self): return self.mu
+    def variance(self): return self.var
+    def pmf(self, x): return (1 / math.sqrt(2 * math.pi * self.var)) * math.exp(- ((x - self.mu) ** 2) / (2 * self.var))
+    def cdf(self, z): return round(sp.integrate.quad(lambda w : (1 / math.sqrt(2 * math.pi)) * math.exp(-((w) ** 2) / 2), float('-inf'), z)[0], 4)
