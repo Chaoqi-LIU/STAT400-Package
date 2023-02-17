@@ -1,12 +1,7 @@
 import math
 
 class Math:
-    def fact(n):
-        ans = 1
-        while n:
-            ans *= n
-            n -= 1
-        return ans
+    def fact(n): return math.prod(i for i in range(1, n + 1))
     def C(n, r): return Math.fact(n) / (Math.fact(n - r) * Math.fact(r))
 
 class NegativeBinominal:
