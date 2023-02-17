@@ -24,7 +24,3 @@ class Binominal:
     def variance(self): return self.n * self.prob * (1 - self.prob)   
     def pmf(self, x): return Math.C(self.n, x) * (self.prob ** x) * ((1 - self.prob) ** (self.n - x))  
     def cdf(self, x): return sum(self.pmf(i) for i in range(x + 1))
-
-nb = NegativeBinominal(40, 0.1)
-x = nb.cdf(200) - nb.cdf(40)
-print(x)
